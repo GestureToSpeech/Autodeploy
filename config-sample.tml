@@ -1,0 +1,9 @@
+[core]
+addr = "0.0.0.0:4550"
+
+[app]
+repo = "git@github.com:GestureToSpeech/Autodeploy.git"
+branch = "develop"
+
+[hook]
+key = "id_rsa"
