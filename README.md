@@ -1,7 +1,19 @@
 # Autodeploy
 
-To install everything run `sudo bash install.sh`.
+## Run autodeploy
+To download and run autodeploy server at your machine you need to add `config.tml`,
+download the executable file `wget https://github.com/GestureToSpeech/Autodeploy/raw/master/bin/Autodeploy -O Autodeploy && sudo chmod -R 0777 Autodeploy`
+and run it `./Autodeploy`.
+
+Go to settings in your repository, click on `Webhooks`, and click `Add webhook`. Set payload URL to `http://<address of VM>:4550/hook`,
+content type to `application/json`, secret to whatever value you want (make sure to set the same value in `config.tml`),
+set `Just the push event`, set `Active` to true, and click `Add webhook`.
+
+Now the webhook is set up. Your server will receive info whenever anything is pushed.
+
+## Development
+To install all dependencies for development: `sudo bash install.sh`.
 
 Add bin path: `go env -w GOBIN=/path/to/folder/Autodeploy/bin`
 
-Install: `go install Autodeploy`
+Compile to executable: `go install Autodeploy`
