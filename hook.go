@@ -60,7 +60,7 @@ func NewHookHandler(o *HookOptions) http.Handler {
 			return
 		}
 
-		log.Printf("What '%s', '%s'", *ev.Repo.DefaultBranch, *ev.Repo.CloneURL)
+		log.Printf("What '%s', '%s'", *ev.Repo.DefaultBranch, *ev.Head)
 		log.Printf("Da '%s'; '%s'; '%s'", *ev.Repo.Name, *ev.Repo.FullName, *ev.Repo.SSHURL)
 
 		log.Printf("Handling '%s' event for %s", evName, o.App.Repo)
