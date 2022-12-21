@@ -60,12 +60,19 @@ func NewHookHandler(o *HookOptions) http.Handler {
 			return
 		}
 
-		log.Printf("What '%s' '%s'", *ev.Repo.DefaultBranch, ev.GetRef())
-		log.Printf("Da '%s'; '%s'; '%s'", *ev.Repo.Name, *ev.Repo.FullName, *ev.Repo.SSHURL)
-
 		log.Printf("Handling '%s' event for %s", evName, o.App.Repo)
 		if ev.Repo.FullName == nil || *ev.Repo.SSHURL != o.App.Repo {
-			log.Printf("Ignoring '%s' event with incorrect repository name", evName)
+			log.Printf("Ignoring '%s' event with incorrect repository name '%s'", evName, *ev.Repo.SSHURL)
+			http.Error(w, "Bad Request", http.StatusBadRequest)
+			return
+		}
+
+		ref := ev.GetRef()
+		parts := strings.Split(ref, "/")
+		branchName := parts[len(parts)-1]
+
+		if branchName != o.App.Branch {
+			log.Printf("Ignoring '%s' event with incorrect branch name '%s'", evName, branchName)
 			http.Error(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
