@@ -2,7 +2,7 @@
 
 ## Run autodeploy
 To download and run autodeploy server at your machine you need to add `config.tml`,
-download the executable file `wget https://github.com/GestureToSpeech/Autodeploy/raw/master/bin/Autodeploy -O Autodeploy && sudo chmod -R 0777 Autodeploy`
+download the executable file `rm -f Autodeploy && wget https://github.com/GestureToSpeech/Autodeploy/raw/master/bin/Autodeploy -O Autodeploy && sudo chmod -R 0777 Autodeploy`
 and run it `./Autodeploy`.
 
 Go to settings in your repository, click on `Webhooks`, and click `Add webhook`. Set payload URL to `http://<address of VM>:4550/hook`,

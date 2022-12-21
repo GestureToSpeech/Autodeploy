@@ -61,6 +61,7 @@ func NewHookHandler(o *HookOptions) http.Handler {
 		}
 
 		log.Printf("What '%s', '%s'", ev.Repo.PushedAt, ev.Repo.CloneURL)
+		log.Printf("Da '%s'; '%s'; '%s'", ev.Repo.FullName, ev.Repo.Name, *ev.Repo.FullName)
 
 		log.Printf("Handling '%s' event for %s", evName, o.App.Repo)
 		if ev.Repo.FullName == nil || *ev.Repo.FullName != o.App.Repo {
