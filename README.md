@@ -12,6 +12,9 @@ set `Just the push event`, set `Active` to true, and click `Add webhook`.
 
 Now the webhook is set up. Your server will receive info whenever anything is pushed.
 
+You can also add `start.sh` and `stop.sh` bash scripts to you repository to set up and start the repository code, 
+and safely stop it before updating repository.
+
 ## Development
 To install all dependencies for development: `sudo bash install.sh`.
 

@@ -31,7 +31,6 @@ func NewApp(repo string, branch string, mainFolder string) *App {
 
 func (a *App) initRepo() error {
 	_, err := os.Stat(a.RepoFolder)
-	log.Printf("What %t", os.IsNotExist(err))
 	if !os.IsNotExist(err) {
 		log.Print("Repository already initialized")
 		return nil
