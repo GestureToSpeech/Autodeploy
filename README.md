@@ -3,7 +3,8 @@
 ## Run autodeploy
 To download and run autodeploy server at your machine you need to add `config.tml`,
 download the executable file `rm -f Autodeploy && wget https://github.com/GestureToSpeech/Autodeploy/raw/master/bin/Autodeploy -O Autodeploy && sudo chmod -R 0777 Autodeploy`
-and run it `./Autodeploy`.
+and run it `rm -f nohup.out && nohup ./Autodeploy &`. This will start the server in the background. Logs will be in 
+`nohup.out`. To stop it, first run `jobs` and note the number next the start script command, then run `kill %<this number>`.
 
 Go to settings in your repository, click on `Webhooks`, and click `Add webhook`. Set payload URL to `http://<address of VM>:4550/hook`,
 content type to `application/json`, secret to whatever value you want (make sure to set the same value in `config.tml`),

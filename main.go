@@ -21,27 +21,34 @@ func main() {
 		log.Fatal("app.branch not defined")
 	}
 
+	repoFolder, ok := cfg.Get("app.repoFolder").(string)
+	if !ok {
+		log.Fatal("app.repoFolder not defined")
+	}
+
 	key, ok := cfg.Get("hook.key").(string)
 	if !ok {
 		log.Fatal("hook.key not defined")
 	}
 
 	app := &App{
-		Repo:   repo,
-		Branch: branch,
+		Repo:       repo,
+		Branch:     branch,
+		RepoFolder: repoFolder,
 	}
+
+	err = app.initRepo()
+	catch(err)
+
+	err = app.fetchChanges()
+	catch(err)
 
 	http.Handle("/hook", NewHookHandler(&HookOptions{
 		App:    app,
 		Secret: key,
 	}))
 
-	addr, ok := cfg.Get("core.addr").(string)
-	if !ok {
-		log.Fatal("core.addr not defined")
-	}
-
-	err = http.ListenAndServe(addr, nil)
+	err = http.ListenAndServe("0.0.0.0:4550", nil)
 	catch(err)
 }
 

@@ -60,7 +60,6 @@ func NewHookHandler(o *HookOptions) http.Handler {
 			return
 		}
 
-		log.Printf("Handling '%s' event for %s", evName, o.App.Repo)
 		if ev.Repo.FullName == nil || *ev.Repo.SSHURL != o.App.Repo {
 			log.Printf("Ignoring '%s' event with incorrect repository name '%s'", evName, *ev.Repo.SSHURL)
 			http.Error(w, "Bad Request", http.StatusBadRequest)
@@ -76,6 +75,7 @@ func NewHookHandler(o *HookOptions) http.Handler {
 			http.Error(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
+		log.Printf("Handling '%s' event for %s", evName, o.App.Repo)
 
 		// err = o.App.Update()
 		if err != nil {
