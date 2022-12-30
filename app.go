@@ -23,7 +23,7 @@ func NewApp(repo string, branch string, mainFolder string) *App {
 		Repo:       repo,
 		Branch:     branch,
 		MainFolder: mainFolder,
-		RepoFolder: mainFolder,
+		RepoFolder: mainFolder + repoName + "/",
 	}
 
 	return a
