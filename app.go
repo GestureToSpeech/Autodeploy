@@ -37,14 +37,16 @@ func (a *App) initRepo() error {
 	}
 
 	log.Print("Initializing repository")
-	cmd := exec.Command("bash", "-C", a.MainFolder, "\"git clone "+a.Repo+"\"")
+	cmd := exec.Command("git", "clone", a.Repo)
+	cmd.Dir = a.MainFolder
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
 		return err
 	}
 
-	cmd = exec.Command("bash", "-C", a.RepoFolder, "\"git checkout "+a.Branch+"\"")
+	cmd = exec.Command("git", "checkout", a.Branch)
+	cmd.Dir = a.RepoFolder
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
@@ -65,14 +67,16 @@ func (a *App) fetchChanges() error {
 
 	log.Print("Fetching changes")
 
-	cmd := exec.Command("bash", "-C", a.RepoFolder, "\"git fetch -f origin\"")
+	cmd := exec.Command("git", "fetch", "-f", "origin")
+	cmd.Dir = a.RepoFolder
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
 		return err
 	}
 
-	cmd = exec.Command("bash", "-C", a.RepoFolder, "\"git checkout "+a.Branch+"\"")
+	cmd = exec.Command("git", "checkout", a.Branch)
+	cmd.Dir = a.RepoFolder
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
