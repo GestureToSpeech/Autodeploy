@@ -4,12 +4,29 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 type App struct {
 	Repo       string
 	Branch     string
+	MainFolder string
 	RepoFolder string
+}
+
+func NewApp(repo string, branch string, mainFolder string) *App {
+	repoSSHParts := strings.Split(repo, "/")
+	repoName := repoSSHParts[len(repoSSHParts)-1]
+	repoName = strings.TrimSuffix(repoName, ".git")
+
+	a := &App{
+		Repo:       repo,
+		Branch:     branch,
+		MainFolder: mainFolder,
+		RepoFolder: mainFolder,
+	}
+
+	return a
 }
 
 func (a *App) initRepo() error {
@@ -20,19 +37,14 @@ func (a *App) initRepo() error {
 	}
 
 	log.Print("Initializing repository")
-	err = os.MkdirAll(a.RepoFolder, 0755)
-	if err != nil {
-		return err
-	}
-
-	cmd := exec.Command("git", "--git-dir="+a.RepoFolder, "init")
+	cmd := exec.Command("bash", "-C", a.MainFolder, "\"git clone "+a.Repo+"\"")
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
 		return err
 	}
 
-	cmd = exec.Command("git", "--git-dir="+a.RepoFolder, "remote", "add", "origin", a.Repo)
+	cmd = exec.Command("bash", "-C", a.RepoFolder, "\"git checkout "+a.Branch+"\"")
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
@@ -53,12 +65,20 @@ func (a *App) fetchChanges() error {
 
 	log.Print("Fetching changes")
 
-	cmd := exec.Command("git", "--git-dir="+a.RepoFolder, "fetch", "-f", "origin", a.Branch+":"+a.Branch)
+	cmd := exec.Command("bash", "-C", a.RepoFolder, "\"git fetch -f origin\"")
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
 		return err
 	}
+
+	cmd = exec.Command("bash", "-C", a.RepoFolder, "\"git checkout "+a.Branch+"\"")
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+	log.Printf("Repository initialized")
 	log.Print("Finished fetching")
 
 	_, err = os.Stat(a.RepoFolder + "start.sh")

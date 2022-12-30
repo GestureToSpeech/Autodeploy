@@ -21,9 +21,9 @@ func main() {
 		log.Fatal("app.branch not defined")
 	}
 
-	repoFolder, ok := cfg.Get("app.repoFolder").(string)
+	mainFolder, ok := cfg.Get("app.mainFolder").(string)
 	if !ok {
-		log.Fatal("app.repoFolder not defined")
+		log.Fatal("app.mainFolder not defined")
 	}
 
 	key, ok := cfg.Get("hook.key").(string)
@@ -31,11 +31,7 @@ func main() {
 		log.Fatal("hook.key not defined")
 	}
 
-	app := &App{
-		Repo:       repo,
-		Branch:     branch,
-		RepoFolder: repoFolder,
-	}
+	app := NewApp(repo, branch, mainFolder)
 
 	err = app.initRepo()
 	catch(err)
