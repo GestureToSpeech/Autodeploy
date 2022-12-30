@@ -65,12 +65,17 @@ func (a *App) fetchChanges() error {
 
 	log.Print("Fetching changes")
 
-	err = executeCommand(a.RepoFolder, "git", "fetch", "-f", "origin")
+	err = executeCommand(a.RepoFolder, "git", "fetch", "origin")
 	if err != nil {
 		return err
 	}
 
 	err = executeCommand(a.RepoFolder, "git", "checkout", a.Branch)
+	if err != nil {
+		return err
+	}
+
+	err = executeCommand(a.RepoFolder, "git", "pull")
 	if err != nil {
 		return err
 	}
