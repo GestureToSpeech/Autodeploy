@@ -77,7 +77,7 @@ func NewHookHandler(o *HookOptions) http.Handler {
 		}
 		log.Printf("Handling '%s' event for %s", evName, o.App.Repo)
 
-		// err = o.App.Update()
+		err = o.App.fetchChanges()
 		if err != nil {
 			return
 		}

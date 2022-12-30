@@ -37,18 +37,12 @@ func (a *App) initRepo() error {
 	}
 
 	log.Print("Initializing repository")
-	cmd := exec.Command("git", "clone", a.Repo)
-	cmd.Dir = a.MainFolder
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = executeCommand(a.MainFolder, "git", "clone", a.Repo)
 	if err != nil {
 		return err
 	}
 
-	cmd = exec.Command("git", "checkout", a.Branch)
-	cmd.Dir = a.RepoFolder
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = executeCommand(a.RepoFolder, "git", "checkout", a.Branch)
 	if err != nil {
 		return err
 	}
@@ -61,36 +55,50 @@ func (a *App) fetchChanges() error {
 	_, err := os.Stat(a.RepoFolder + "stop.sh")
 	if os.IsExist(err) {
 		log.Print("Running stop.sh")
+		err = executeCommand(a.RepoFolder, "sh", "stop.sh")
+		if err != nil {
+			return err
+		}
 	} else {
 		log.Print("No stop.sh file found in repository folder")
 	}
 
 	log.Print("Fetching changes")
 
-	cmd := exec.Command("git", "fetch", "-f", "origin")
-	cmd.Dir = a.RepoFolder
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = executeCommand(a.RepoFolder, "git", "fetch", "-f", "origin")
 	if err != nil {
 		return err
 	}
 
-	cmd = exec.Command("git", "checkout", a.Branch)
-	cmd.Dir = a.RepoFolder
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+	err = executeCommand(a.RepoFolder, "git", "checkout", a.Branch)
 	if err != nil {
 		return err
 	}
-	log.Printf("Repository initialized")
 	log.Print("Finished fetching")
 
 	_, err = os.Stat(a.RepoFolder + "start.sh")
 	if os.IsExist(err) {
 		log.Print("Running start.sh")
+		err = executeCommand(a.RepoFolder, "sh", "start.sh")
+		if err != nil {
+			return err
+		}
 	} else {
 		log.Print("No start.sh file found in repository folder")
 	}
 
+	return nil
+}
+
+func executeCommand(dir string, commandName string, arg ...string) error {
+	cmd := exec.Command(commandName, arg...)
+	if dir != "" {
+		cmd.Dir = dir
+	}
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
 	return nil
 }
